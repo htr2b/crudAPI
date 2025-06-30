@@ -1,47 +1,49 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+const express = require('express')
+const app = express()
+const PORT = 3000
 
-app.use(express.json());
+app.use(express.json())
+let items = []
 
-let items = [];
-
+//GET
 app.get('/items', (req, res) => {
-    res.json(items)
+    res.json(items);
 })
 
+//GETID
 app.get('/items/:id', (req, res) => {
     const id = Number(req.params.id)
     const item = items.find(i => i.id === id)
-    if (!item) return res.status(404).json({ error: 'there is no item in items' })
     res.json(item)
 })
 
+//POST
 app.post('/items', (req, res) => {
     const { name } = req.body
     const newItem = {
-        id: items.length + 1, name
+        id: items.length + 1,
+        name
     }
     items.push(newItem)
-    res.status(201).json(newItem)
+    res.status(201).json(items)
 })
 
-app.put('/items/:id', (req, res) => {
+//PUT
+app.put('/item', (req, res) => {
     const id = Number(req.params.id)
     const item = items.find(i => i.id === id)
     item.name = req.body.name
-    res.json(item);
+    res.json(item)
 })
 
-app.delete('/items/:id', (req, res) => {
+//DELETE
+app.delete('/items', (req, res) => {
     const id = Number(req.params.id)
-    items[id - 1] = null
+    const index = items.findIndex(i => i.id === id)
+    items.splice(index - 1, 1)
     res.json(items)
-    res.status(201)
 })
-
-
 
 app.listen(PORT, () => {
-    console.log(`CRUD API works on port localhost:${PORT}`);
-});
+    console.log('works');
+})
